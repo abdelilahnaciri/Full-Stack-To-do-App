@@ -9,14 +9,15 @@ import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
+import ErrorHandler from "../components/errors/ErrorHandler";
 
-const isAllowed = false;
+const isAllowed = true;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* Root Layout */}
-      <Route path="/" element={<RootLayout />}>
+      <Route path="/" element={<RootLayout />} errorElement={<ErrorHandler />}>
         <Route
           index
           element={
