@@ -1,7 +1,16 @@
-import { string } from "yup";
-
-export interface IFormInputs {
+export interface IRegisterInput {
   name: "username" | "email" | "password";
+  type: string;
+  placeholder: string;
+  validation: {
+    required?: boolean;
+    minLength?: number;
+    pattern?: RegExp;
+  };
+}
+
+export interface ILoginInput {
+  name: "identifier" | "password";
   type: string;
   placeholder: string;
   validation: {

@@ -64,7 +64,7 @@ const RegisterPage = () => {
     } finally {
       setIsLoding(false);
     }
-    console.log(data);
+    // console.log(data);
   };
 
   // ** Renders
@@ -86,7 +86,7 @@ const RegisterPage = () => {
       <h2 className="text-center mb-4 text-3xl font-semibold">
         Register to get access!
       </h2>
-      <form action="" className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {renderRegisterForm}
         <Button isLoading={isLoding}>Register</Button>
       </form>
