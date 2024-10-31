@@ -11,7 +11,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
 import ErrorHandler from "../components/errors/ErrorHandler";
 
-const isAllowed = true;
+const isAllowed = false;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
