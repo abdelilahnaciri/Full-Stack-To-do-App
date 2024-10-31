@@ -1,3 +1,5 @@
+import { string } from "yup";
+
 export interface IFormInputs {
   name: "username" | "email" | "password";
   type: string;
@@ -6,5 +8,16 @@ export interface IFormInputs {
     required?: boolean;
     minLength?: number;
     pattern?: RegExp;
+  };
+}
+
+export interface IErrorResponse {
+  error: {
+    details?: {
+      error: {
+        message: string;
+      }[];
+    };
+    message: string;
   };
 }

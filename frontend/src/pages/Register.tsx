@@ -8,6 +8,8 @@ import { registerSchema } from "../validation";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { AxiosError } from "axios";
+import { IErrorResponse } from "../interfaces";
 
 interface IFormInput {
   username: string;
@@ -48,7 +50,17 @@ const RegisterPage = () => {
       }
       // console.log(res);
     } catch (error) {
-      console.log(error);
+      const errorObj = error as AxiosError<IErrorResponse>;
+      toast.error(`${errorObj?.response?.data.error.message}`, {
+        position: "bottom-center",
+        duration: 1500,
+        style: {
+          backgroundColor: "black",
+          color: "white",
+          width: "fit-content",
+        },
+      });
+      // console.log(errorObj);
     } finally {
       setIsLoding(false);
     }
@@ -76,7 +88,7 @@ const RegisterPage = () => {
       </h2>
       <form action="" className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {renderRegisterForm}
-        <Button>{isLoding ? "Loding..." : "Register"}</Button>
+        <Button isLoading={isLoding}>Register</Button>
       </form>
     </div>
   );
