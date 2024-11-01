@@ -2,41 +2,20 @@
 import Button from "./ui/Button";
 import axiosInstance from "../config/axios.config";
 import { useQuery } from "@tanstack/react-query";
+import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 
 const TodoList = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
 
-  // const [todos, setTodos] = useState([]);
-  // useEffect(() => {
-  //   try {
-  //     axiosInstance
-  //       .get("/users/me?populate=todos", {
-  //         headers: {
-  //           Authorization: `Bearer ${userData.jwt}`,
-  //         },
-  //       })
-  //       .then((res) => setTodos(res.data.todos))
-  //       .catch((err) => console.log("The Error: ", err));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [userData.jwt]);
-
-  const { isLoading, data } = useQuery({
+  const { isLoading, data } = useAuthenticatedQuery({
     queryKey: ["todos"],
-    queryFn: async () => {
-      const { data: res } = await axiosInstance.get(
-        "/users/me?populate=todos",
-        {
-          headers: {
-            Authorization: `Bearer ${userData.jwt}`,
-          },
-        }
-      );
-      // console.log(res);
-      return res;
+    url: "/users/me?populate=todos",
+    config: {
+      headers: {
+        Authorization: `Bearer ${userData.jwt}`,
+      },
     },
   });
 
@@ -64,7 +43,6 @@ const TodoList = () => {
         ))
       ) : (
         <h3>No todos yet!</h3>
-        
       )}
     </div>
   );
