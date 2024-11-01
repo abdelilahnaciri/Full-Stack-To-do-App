@@ -23,15 +23,23 @@ const router = createBrowserRouter(
         <Route
           index
           element={
-            <ProtectedRoute isAllowed={userData} redirectPath="/login">
+            <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
+              <h2>Profile page</h2>
             </ProtectedRoute>
           }
         />
         <Route
           path="/login"
           element={
-            <ProtectedRoute isAllowed={!userData} redirectPath="/">
+            <ProtectedRoute isAllowed={!userData?.jwt} redirectPath="/">
               <LoginPage />
             </ProtectedRoute>
           }
@@ -39,7 +47,7 @@ const router = createBrowserRouter(
         <Route
           path="/register"
           element={
-            <ProtectedRoute isAllowed={!userData} redirectPath="/login">
+            <ProtectedRoute isAllowed={!userData?.jwt} redirectPath="/login">
               <RegisterPage />
             </ProtectedRoute>
           }

@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { NavLink, useLocation } from "react-router-dom";
+import Button from "./ui/Button";
 
 const Navbar = () => {
   const storageKey = "loggedInUser";
@@ -23,20 +24,19 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="max-w-lg mx-auto mt-7 mb-20 bg-indigo-600 px-3 py-5 rounded-md">
+    <nav className="max-w-lg mx-auto mt-7 mb-20 px-3 py-5 rounded-md">
       <ul className="flex items-center justify-between">
-        <li className="text-white duration-200 font-semibold text-lg">
+        <li className="duration-200 font-semibold text-lg">
           <NavLink to="/">Home</NavLink>
         </li>
         {userData ? (
-          <div className="text-white flex items-center space-x-3">
-            <span>Email:{userData.user.email}</span>
-            <span
-              className="font-semibold text-lg cursor-pointer"
-              onClick={onLogout}
-            >
+          <div className="flex items-center text-indigo-600 space-x-2">
+            <li className=" duration-200 text-lg">
+              <NavLink to="/profile">Profile</NavLink>
+            </li>
+            <Button className="cursor-pointer" onClick={onLogout}>
               Logout
-            </span>
+            </Button>
           </div>
         ) : (
           <p className="text-white flex items-center space-x-3">
