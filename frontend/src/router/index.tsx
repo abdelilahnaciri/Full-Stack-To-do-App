@@ -11,8 +11,10 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
 import ErrorHandler from "../components/errors/ErrorHandler";
 
-const isAllowed = false;
-
+// const isAllowed = false;
+const storageKey = "loggedInUser";
+const userDataString = localStorage.getItem(storageKey);
+const userData = userDataString ? JSON.parse(userDataString) : null;
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -21,7 +23,7 @@ const router = createBrowserRouter(
         <Route
           index
           element={
-            <ProtectedRoute isAllowed={isAllowed} redirectPath="/login">
+            <ProtectedRoute isAllowed={userData} redirectPath="/login">
               <HomePage />
             </ProtectedRoute>
           }
@@ -29,7 +31,7 @@ const router = createBrowserRouter(
         <Route
           path="/login"
           element={
-            <ProtectedRoute isAllowed={!isAllowed} redirectPath="/">
+            <ProtectedRoute isAllowed={!userData} redirectPath="/">
               <LoginPage />
             </ProtectedRoute>
           }
@@ -37,7 +39,7 @@ const router = createBrowserRouter(
         <Route
           path="/register"
           element={
-            <ProtectedRoute isAllowed={!isAllowed} redirectPath="/login">
+            <ProtectedRoute isAllowed={!userData} redirectPath="/login">
               <RegisterPage />
             </ProtectedRoute>
           }

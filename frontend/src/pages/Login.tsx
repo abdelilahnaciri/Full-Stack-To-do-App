@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import { IErrorResponse } from "../interfaces";
 import toast from "react-hot-toast";
 import axiosInstance from "../config/axios.config";
+import { useNavigate } from "react-router-dom";
 
 interface IFormInput {
   identifier: string;
@@ -17,6 +18,7 @@ interface IFormInput {
 }
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [isLoding, setIsLoding] = useState(false);
   const {
     register,
@@ -30,21 +32,26 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoding(true);
     try {
-      const { status } = await axiosInstance.post("/auth/local", data);
+      const { status, data: resData } = await axiosInstance.post(
+        "/auth/local",
+        data
+      );
+      console.log(resData);
       if (status === 200) {
-        toast.success(
-          "You will navigate to the home page after 2 seconds to login.",
-          {
-            position: "bottom-center",
-            duration: 1500,
-            style: {
-              backgroundColor: "black",
-              color: "white",
-              width: "fit-content",
-            },
-          }
-        );
+        toast.success("You will navigate to the home page after 2 seconds.", {
+          position: "bottom-center",
+          duration: 1500,
+          style: {
+            backgroundColor: "black",
+            color: "white",
+            width: "fit-content",
+          },
+        });
       }
+      localStorage.setItem("loggedInUser", JSON.stringify(resData));
+      setTimeout(() => {
+        location.replace("/");
+      }, 2000);
     } catch (error) {
       const errorObj = error as AxiosError<IErrorResponse>;
       toast.error(`${errorObj?.response?.data.error.message}`, {
