@@ -14,6 +14,7 @@ const TodoList = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
 
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenConfirmalModal, setOpenConfirmalModal] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [todoToEdit, setTodoToEdit] = useState<ITodo>({
     id: 0,
@@ -93,6 +94,32 @@ const TodoList = () => {
     }
     // console.log(todoToEdit);
   };
+  const onOpenConfirmalModal = (todo: ITodo) => {
+    setTodoToEdit(todo);
+    setOpenConfirmalModal(true);
+  };
+  const CloseConfirmalModal = () => {
+    setTodoToEdit({
+      id: 0,
+      title: "",
+      description: "",
+    });
+    setOpenConfirmalModal(false);
+  };
+  const onRemove = async () => {
+    try {
+      const { status } = await axiosInstance.delete(`/todos/${todoToEdit.id}`, {
+        headers: {
+          Authorization: `Bearer ${userData.jwt}`,
+        },
+      });
+      if (status === 200) {
+        CloseConfirmalModal();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isLoading) return <p>Loading...</p>;
   return (
@@ -115,7 +142,11 @@ const TodoList = () => {
               >
                 Edit
               </Button>
-              <Button variant={"danger"} size={"sm"}>
+              <Button
+                variant={"danger"}
+                size={"sm"}
+                onClick={() => onOpenConfirmalModal(todo)}
+              >
                 Remove
               </Button>
             </div>
@@ -124,6 +155,7 @@ const TodoList = () => {
       ) : (
         <h3>No todos yet!</h3>
       )}
+
       {/* Edit Todo Modal */}
       <Modal
         isOpen={isOpenEditModal}
@@ -157,6 +189,25 @@ const TodoList = () => {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Delete Todo Confirm Modal */}
+      <Modal
+        isOpen={isOpenConfirmalModal}
+        closeModal={CloseConfirmalModal}
+        title="Are you sure you want to remove this Todo from your Todo List?"
+        description="Deleting this todo will remove it permanently from your inventory. Any associated data, 
+        and other related information will also be delted. Please make sure this is the intended
+        action"
+      >
+        <div className="flex items-center space-x-3">
+          <Button variant={"danger"} onClick={onRemove}>
+            Yes, remove
+          </Button>
+          <Button variant={"cancel"} onClick={CloseConfirmalModal}>
+            Cancel
+          </Button>
+        </div>
       </Modal>
     </div>
   );
