@@ -7,6 +7,7 @@ import { ITodo } from "../interfaces";
 import Textarea from "./ui/Textarea";
 import axiosInstance from "../config/axios.config";
 import InputErrorMessage from "./ui/InputErrorMessage";
+import TodoSkeleton from "./TodoSkeleton";
 
 const TodoList = () => {
   const storageKey = "loggedInUser";
@@ -121,7 +122,14 @@ const TodoList = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="space-y-1">
+        {Array.from({ length: 4 }).map((_, idx) => (
+          <TodoSkeleton key={idx} />
+        ))}
+      </div>
+    );
   return (
     <div className="space-y-1">
       {data.todos.length ? (
