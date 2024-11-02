@@ -16,9 +16,14 @@ const TodoList = () => {
 
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenConfirmalModal, setOpenConfirmalModal] = useState(false);
+  const [isOpenTodoAddModal, setOpenTodoAddModal] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [todoToEdit, setTodoToEdit] = useState<ITodo>({
     id: 0,
+    title: "",
+    description: "",
+  });
+  const [todoToAdd, setTodoToAdd] = useState({
     title: "",
     description: "",
   });
@@ -121,6 +126,66 @@ const TodoList = () => {
       console.log(error);
     }
   };
+  const CloseTodoAddModal = () => {
+    setTodoToAdd({
+      title: "",
+      description: "",
+    });
+    setOpenTodoAddModal(false);
+  };
+  const onChangeTodoAddHandler = (
+    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { value, name } = event.target;
+    setTodoToAdd({
+      ...todoToAdd,
+      [name]: value,
+    });
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+  };
+  const onSubmitTodoToAddHandler = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    setIsUpdated(true);
+    event.preventDefault();
+    const { title, description } = todoToAdd;
+    if (title.trim() === "") {
+      setErrors({
+        title: "Title is Required.",
+      });
+      setIsUpdated(false);
+      return;
+    }
+    try {
+      console.log(todoToAdd);
+      const { status } = await axiosInstance.post(
+        `/todos`,
+        {
+          data: {
+            title,
+            description,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.jwt}`,
+          },
+        }
+      );
+      if (status === 200) {
+        CloseTodoAddModal();
+      }
+      // console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsUpdated(false);
+    }
+    // console.log(todoToEdit);
+  };
 
   if (isLoading)
     return (
@@ -132,6 +197,11 @@ const TodoList = () => {
     );
   return (
     <div className="space-y-1">
+      <div className="w-fit mx-auto my-10">
+        <Button size={"sm"} onClick={() => setOpenTodoAddModal(true)}>
+          Post New Todo
+        </Button>
+      </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (
           <div
@@ -216,6 +286,45 @@ const TodoList = () => {
             Cancel
           </Button>
         </div>
+      </Modal>
+
+      {/* Add New Todo Modal */}
+      <Modal
+        isOpen={isOpenTodoAddModal}
+        closeModal={CloseTodoAddModal}
+        title="Add New Todo"
+      >
+        <form className="space-y-3" onSubmit={onSubmitTodoToAddHandler}>
+          <Input
+            name="title"
+            type="text"
+            placeholder="New Title..."
+            value={todoToAdd.title}
+            onChange={onChangeTodoAddHandler}
+          />
+          {errors.title && <InputErrorMessage msg={errors.title} />}
+          <Textarea
+            name="description"
+            placeholder="New Description..."
+            value={todoToAdd.description}
+            onChange={onChangeTodoAddHandler}
+          />
+          <div className="flex items-center space-x-3 mt-4">
+            <Button
+              className="bg-indigo-700 hover:bg-indigo-800"
+              isLoading={isUpdated}
+            >
+              Update
+            </Button>
+            <Button
+              type="button"
+              variant={"cancel"}
+              onClick={CloseTodoAddModal}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
       </Modal>
     </div>
   );
