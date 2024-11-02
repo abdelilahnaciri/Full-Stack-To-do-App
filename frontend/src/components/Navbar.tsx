@@ -34,7 +34,7 @@ const Navbar = () => {
             <li className=" duration-200 text-lg">
               <NavLink to="/profile">Profile</NavLink>
             </li>
-            <Button className="cursor-pointer" onClick={onLogout}>
+            <Button className="cursor-pointer" size={"sm"} onClick={onLogout}>
               Logout
             </Button>
           </div>

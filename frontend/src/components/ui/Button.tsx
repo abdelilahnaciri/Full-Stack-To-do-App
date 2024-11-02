@@ -1,19 +1,62 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "../../lib/utils";
+import { VariantProps, cva } from "class-variance-authority";
+import { HTMLAttributes, ReactNode } from "react";
 
-interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+const buttonVariants = cva(
+  "flex items-center justify-center rounded-md font-medium text-white duration-300 dark:text-black disabled:bg-indigo-400 disabled:hover:bg-indigo-400 disabled:cursor-not-allowed",
+  {
+    variants: {
+      variant: {
+        // ** FILLED
+        default:
+          "bg-slate-900 dark:bg-indigo-600 dark:text-white dark:hover:bg-indigo-700",
+        danger:
+          "bg-red-900 dark:bg-[#c2344d] dark:text-white dark:hover:bg-red-700",
+        cancel:
+          "bg-gray-300 text-gray-700 dark:bg-[#f5f5fa] dark:text-dark hover:bg-gray-400 dark:hover:bg-gray-200",
+
+        // ** OUTLINE
+        outline:
+          "border border-indigo-400 hover:text-white bg-transparent text-black hover:border-transparent hover:bg-indigo-600 dark:text-gray-700 dark:hover:text-white",
+      },
+      size: {
+        default: "p-3",
+        sm: "text-sm px-4 py-2",
+      },
+      fullWidth: {
+        true: "w-full",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+interface ButtonProps
+  extends HTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   children: ReactNode;
   isLoading?: boolean;
   type?: "submit" | "button" | "reset";
 }
 
-const Button = ({ children, isLoading }: IProps) => {
+const Button = ({
+  variant,
+  size,
+  fullWidth,
+  isLoading,
+  className,
+  children,
+  type,
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      className="flex items-center justify-center rounded-md
-      font-medium text-white duration-300 disabled:bg-indigo-400
-    disabled:hover:bg-indigo-400 disabled:cursor-not-allowed
-    bg-slate-900 dark:bg-indigo-600 dark:text-white
-    dark:hover:bg-indigo-700 p-3 w-full"
+      type={type}
+      className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+      {...props}
       disabled={isLoading}
     >
       {isLoading ? (
@@ -38,7 +81,7 @@ const Button = ({ children, isLoading }: IProps) => {
           ></path>
         </svg>
       ) : null}
-      {isLoading ? "Loading" : children}
+      {children}
     </button>
   );
 };
