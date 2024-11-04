@@ -8,6 +8,7 @@ import Textarea from "./ui/Textarea";
 import axiosInstance from "../config/axios.config";
 import InputErrorMessage from "./ui/InputErrorMessage";
 import TodoSkeleton from "./TodoSkeleton";
+import { faker } from "@faker-js/faker";
 
 const TodoList = () => {
   const storageKey = "loggedInUser";
@@ -197,6 +198,31 @@ const TodoList = () => {
     }
     // console.log(todoToEdit);
   };
+  const onGenerateTodos = async () => {
+    for (let index = 0; index < 100; index++) {
+      try {
+        console.log(todoToAdd);
+        const { data } = await axiosInstance.post(
+          `/todos`,
+          {
+            data: {
+              title: faker.word.words(5),
+              description: faker.lorem.paragraphs(2),
+              user: userData.user.id,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.jwt}`,
+            },
+          }
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   if (isLoading)
     return (
@@ -219,7 +245,7 @@ const TodoList = () => {
             <Button size={"sm"} onClick={() => setOpenTodoAddModal(true)}>
               Post New Todo
             </Button>
-            <Button variant={"outline"} size={"sm"} onClick={() => {}}>
+            <Button variant={"outline"} size={"sm"} onClick={onGenerateTodos}>
               Generate Todos
             </Button>
           </div>
