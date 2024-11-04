@@ -17,7 +17,15 @@
       "required": true
     },
     "description": {
-      "type": "text"
+      "type": "text",
+      "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "todos",
+      "required": true
     }
   }
 }

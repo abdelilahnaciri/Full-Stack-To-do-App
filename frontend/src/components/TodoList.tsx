@@ -14,6 +14,7 @@ const TodoList = () => {
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
 
+  const [queryVersion, setQueryVersion] = useState(1);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenConfirmalModal, setOpenConfirmalModal] = useState(false);
   const [isOpenTodoAddModal, setOpenTodoAddModal] = useState(false);
@@ -32,7 +33,7 @@ const TodoList = () => {
   });
 
   const { isLoading, data } = useAuthenticatedQuery({
-    queryKey: ["TodoList", `${todoToEdit.id}`],
+    queryKey: ["TodoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
     config: {
       headers: {
@@ -48,6 +49,9 @@ const TodoList = () => {
       id: 0,
       title: "",
       description: "",
+    });
+    setErrors({
+      title: "",
     });
     setIsOpenEditModal(false);
   };
@@ -91,6 +95,7 @@ const TodoList = () => {
       );
       if (status === 200) {
         onCloseEditModal();
+        setQueryVersion((prev) => prev + 1);
       }
       // console.log(res);
     } catch (error) {
@@ -121,6 +126,7 @@ const TodoList = () => {
       });
       if (status === 200) {
         CloseConfirmalModal();
+        setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {
       console.log(error);
@@ -130,6 +136,9 @@ const TodoList = () => {
     setTodoToAdd({
       title: "",
       description: "",
+    });
+    setErrors({
+      title: "",
     });
     setOpenTodoAddModal(false);
   };
@@ -167,6 +176,7 @@ const TodoList = () => {
           data: {
             title,
             description,
+            user: userData.user.id,
           },
         },
         {
@@ -177,6 +187,7 @@ const TodoList = () => {
       );
       if (status === 200) {
         CloseTodoAddModal();
+        setQueryVersion((prev) => prev + 1);
       }
       // console.log(res);
     } catch (error) {
@@ -198,9 +209,21 @@ const TodoList = () => {
   return (
     <div className="space-y-1">
       <div className="w-fit mx-auto my-10">
-        <Button size={"sm"} onClick={() => setOpenTodoAddModal(true)}>
-          Post New Todo
-        </Button>
+        {isLoading ? (
+          <div className="flex items-center space-x-2 animate-pulse">
+            <div className="w-32 h-9 bg-gray-300 rounded-md dark:bg-gray-400"></div>
+            <div className="w-32 h-9 bg-gray-300 rounded-md dark:bg-gray-400"></div>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Button size={"sm"} onClick={() => setOpenTodoAddModal(true)}>
+              Post New Todo
+            </Button>
+            <Button variant={"outline"} size={"sm"} onClick={() => {}}>
+              Generate Todos
+            </Button>
+          </div>
+        )}
       </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (
@@ -314,7 +337,7 @@ const TodoList = () => {
               className="bg-indigo-700 hover:bg-indigo-800"
               isLoading={isUpdated}
             >
-              Update
+              Done
             </Button>
             <Button
               type="button"
