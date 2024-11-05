@@ -201,7 +201,6 @@ const TodoList = () => {
   const onGenerateTodos = async () => {
     for (let index = 0; index < 100; index++) {
       try {
-        console.log(todoToAdd);
         const { data } = await axiosInstance.post(
           `/todos`,
           {
