@@ -32,6 +32,9 @@ const Navbar = () => {
         {userData ? (
           <div className="flex items-center text-indigo-600 space-x-2">
             <li className=" duration-200 text-lg">
+              <NavLink to="/todos">Todos</NavLink>
+            </li>
+            <li className=" duration-200 text-lg">
               <NavLink to="/profile">Profile</NavLink>
             </li>
             <Button className="cursor-pointer" size={"sm"} onClick={onLogout}>
