@@ -10,7 +10,6 @@ import { AxiosError } from "axios";
 import { IErrorResponse } from "../interfaces";
 import toast from "react-hot-toast";
 import axiosInstance from "../config/axios.config";
-import { useNavigate } from "react-router-dom";
 
 interface IFormInput {
   identifier: string;
@@ -18,7 +17,6 @@ interface IFormInput {
 }
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const [isLoding, setIsLoding] = useState(false);
   const {
     register,
